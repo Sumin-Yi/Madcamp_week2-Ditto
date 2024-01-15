@@ -10,18 +10,6 @@ import ImageSearch from './components/ImageSearch'
 
 function App() {
 
-//   const [data, setData] = useState([{}])
-
-//   useEffect(() => {
-//       fetch("http://143.248.197.57:3000/api").then(
-//           res => res.json()
-//       ).then(
-//           data => {
-//               setData(data);
-//               console.log(data)
-//           }
-//       )
-//   }, [])
   return (
     <Router>
         <div className="App">
