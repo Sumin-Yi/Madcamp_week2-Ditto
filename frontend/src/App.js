@@ -1,8 +1,6 @@
-
 import {BrowserRouter as Router, Route, Routes, Link} from 'react-router-dom';
 import Datemap from './components/Datemap';
 import Upload from './components/Upload' ;
-import React, {useState, useEffect} from 'react';
 import KeywordSearch from './components/KeywordSearch';
 import Landing from "./components/Landing"
 import Login from './components/Login'
@@ -11,14 +9,8 @@ import MyLists from './components/MyLists'
 import ImageSearch from './components/ImageSearch'
 import React, { useState, useEffect } from 'react'
 import './App.css'
-import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 
-import Login from './components/Login'
-import SignUp from './components/Signup'
-import MyLists from './components/MyLists'
-import ImageSearch from './components/ImageSearch'
-
-
+function App(){
   return (
     <Router>
     <div className="App">
