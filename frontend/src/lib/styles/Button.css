@@ -1,0 +1,42 @@
+@import url("./root.css");
+
+.primary-button {
+    padding: 0.9rem 1.75rem;
+    background-color: white;
+    outline: none;
+    border: none;
+    border-radius: 5rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s;
+  }
+
+.primary-button:hover {
+    background-color: rgb(234, 234, 234);
+  }
+
+.secondary-button {
+    padding: 1rem 2.5rem;
+    background-color: var(--main4);
+    outline: none;
+    border: none;
+    border-radius: 5rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+    font-weight: 600;
+    color: black;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .secondary-button svg {
+    margin-left: 0.75rem;
+    font-size: 1.5rem;
+  }
+
+  .secondary-button:hover {
+    background-color: var(--orange100);
+  }

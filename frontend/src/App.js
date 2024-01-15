@@ -1,28 +1,25 @@
-import React, { useState, useEffect } from 'react'
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import Datemap from './components/Datemap';
+import Upload from './components/Upload' ;
+import React, {useState, useEffect} from 'react';
+import KeywordSearch from './components/KeywordSearch';
+import Landing from "./components/Landing"
 
 function App() {
 
-  const [data, setData] = useState([{}])
+  console.log("start")
 
-  useEffect(() => {
-      fetch("http://172.10.8.235/api").then(
-          res => res.json()
-      ).then(
-          data => {
-              setData(data);
-              console.log(data)
-          }
-      )
-  }, [])
+
   return (
-      <div>
-          {(data.message === null) ? (
-              <p>Why fail?</p>
-          ) : (
-              <p>{data.message}</p>
-          )}
-      </div>
-  )
+    <Router>
+      <Routes>
+        <Route path='/' element = {<Landing/>}/>
+        <Route path = "/map" element={<Datemap search = {"대전 봉명동 카페"}/>}/>
+        <Route path = "/upload" element = {<Upload/>}/>
+        <Route path = '/keywordsearch' element = {<KeywordSearch/>}/>
+      </Routes>
+    </Router>
+  );
 }
 
 export default App
