@@ -18,7 +18,7 @@ import SignUp from './components/Signup'
 import MyLists from './components/MyLists'
 import ImageSearch from './components/ImageSearch'
 
-
+function App() {
   return (
     <Router>
     <div className="App">
