@@ -8,7 +8,6 @@ import SearchPlace from '../toolcomponents/SearchPlace';
 function Datemap(search) {
   
     console.log(search);
-
     const [places, setplaces] = useState(null);
     
     useEffect(() => {
@@ -17,7 +16,7 @@ function Datemap(search) {
         setplaces(getplaces);
       }
       fetchPlaces()
-    }, []);
+    }, [search]);
 
 
   const new_script = src => { 
