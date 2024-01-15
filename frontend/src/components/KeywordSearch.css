@@ -1,0 +1,9 @@
+@import url("../lib/styles/root.css");
+@import url("../lib/styles/Text.css");
+
+.full{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}

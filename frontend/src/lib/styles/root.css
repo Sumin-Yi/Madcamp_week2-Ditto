@@ -1,9 +1,12 @@
 :root {
-    --main1: #56CBF9;
-    --main2: #7FBEEB;
-    --main3: #AFBED1;
-    --main4: #EAC5D8;
-    --main5: #DBD8F0;
+    --main1: #5AA9E6;
+    --main2: #7FC8F8;
+    --main3: #F9F9F9;
+    --main4: #FFE45E;
+    --main5: #FF6392;
     --white: #fff;
     --black: #000;
+    --brown100: #8B575C;
+    --brown200: #C98986;
+    --orange100: #e48f0f;
 }

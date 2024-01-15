@@ -1,0 +1,100 @@
+@import url("../lib/styles/root.css");
+
+.progress_bar1{
+    
+    position: relative;
+    width: 920px;
+    height: 20px;
+    left: 0px;
+    top: 10px;    
+    background: var(--brown200);
+    border-radius: 50px;
+}
+
+.progress_bar2{
+    
+    position: relative;
+    width: 920px;
+    height: 20px;
+    left: 0px;
+    top: 10px;
+    
+    background: linear-gradient(to right, var(--brown100) 50%, var(--brown200) 50%);
+    border-radius: 50px;
+}
+
+.progress_bar3{
+    
+    position: relative;
+    width: 920px;
+    height: 20px;
+    left: 0px;
+    top: 10px;
+    
+    background: var(--brown100);
+    border-radius: 50px;
+}
+
+
+.state1_progress{
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    left: 0px;
+    top: -5px;
+        
+    background: var(--brown100);
+    border: 3px solid var(--black);
+    border-radius: 12.5px;
+}
+
+.state2_progress{
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    left: calc(50% - 12.5px);
+    top: -5px;
+        
+    background: var(--brown100);
+    border: 3px solid var(--black);
+    border-radius: 12.5px;
+}
+
+.state3_progress{
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    left: calc(100% - 25px);
+    top: -5px;
+        
+    background: var(--brown100);
+    border: 3px solid var(--black);
+    border-radius: 12.5px;
+}
+
+.description {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    top: 30px; 
+    width: 100%;
+}
+
+.description p {
+    position: absolute;
+    bottom: -35px;
+}
+
+.description p:nth-child(1) {
+    left: 0;
+}
+
+.description p:nth-child(2) {
+    left: 50%;
+}
+
+.description p:nth-child(3) {
+    left: 100%;
+}
+
