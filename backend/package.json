@@ -1,6 +1,14 @@
 {
   "dependencies": {
+    "@u4/opencv4nodejs": "^6.5.2",
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.0.4"
+  },
+
+  "scripts": {
+    "postinstall": "npm i opencv-build && npm i opencv4nodejs"
   }
 }
