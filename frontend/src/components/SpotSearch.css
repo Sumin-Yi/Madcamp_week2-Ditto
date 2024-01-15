@@ -1,0 +1,57 @@
+@import url("../lib/styles/root.css");
+@import url("../lib/styles/Text.css");
+
+.description{
+    display: flex;
+    justify-content: space-between;
+}
+
+.textbox{
+    display: flex;
+    flex-direction: column;
+    align-items : center;
+    text-align : center;
+}
+
+.progress_bar{
+    position: relative;
+    height: 180px;
+}
+
+.search_result{
+    display: flex;
+    flex-direction: row;
+    height: 500px;
+}
+
+.searchcity{
+    height: 50px;
+}
+
+.resultmap{
+    width: 480px;
+    height: 50px;
+}
+
+.search_bar{
+    width: 500px;
+    height: 100px;
+}
+
+.searchmap{
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+    height: 0px;
+}
+
+.move {
+    display : flex;
+    flex-direction: row;
+    width : 960px;
+    justify-content: space-between;
+}
+
+.keyword-search {
+    margin-left : -800px;
+}

@@ -1,0 +1,36 @@
+@import url("../lib/styles/root.css");
+
+nav{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.home-banner-container {
+    margin: 60;
+    padding: 20;
+    font-family: "Reem Kufi", sans-serif;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+
+  .navbar-links-container a {
+    margin-right: 30px;
+    text-decoration: none;
+    color: rgb(59, 30, 30);
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  .nav-logo-container {
+    max-width: 30px;
+    margin-left: 10px;
+  }
+
+  .navbar-cart-icon {
+    font-size: 1.15rem;
+  }
