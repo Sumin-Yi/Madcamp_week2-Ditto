@@ -1,4 +1,5 @@
 import React, { Component, useEffect, useState } from "react";
+import { Link } from "react-router-dom"
 
 export default class MyLists extends Component {
     constructor(props){
@@ -31,6 +32,9 @@ export default class MyLists extends Component {
             <div>
                 Name<h1>{this.state.userData.username}</h1>
                 ID<h1>{this.state.userData.id}</h1>
+            <Link to="/ImageSearch">
+                <button className="btn btn-primary">Go to ImageSearch</button>
+            </Link>
             </div>
         )
     }

@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import Login from './components/Login'
 import SignUp from './components/Signup'
 import MyLists from './components/MyLists'
+import ImageSearch from './components/ImageSearch'
 
 function App() {
 
@@ -53,6 +54,7 @@ function App() {
                 <Route path="/sign-in" element={<Login />} />
                 <Route path="/sign-up" element={<SignUp />} />
                 <Route path="/my-lists" element={<MyLists />} />
+                <Route path="/image-search" element={<ImageSearch />} />
             </Routes>
             </div>
         </div>

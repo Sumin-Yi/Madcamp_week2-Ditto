@@ -3,10 +3,13 @@ const cors = require('cors');
 const { default: mongoose } = require('mongoose');
 const bcrypt = require("bcryptjs");
 
+const cv = require("@u4/opencv4nodejs")
 
 const jwt = require("jsonwebtoken");
 
 const JWT_SECRET = "fsdhidsfbejbrichuishdihfjkwehihf"
+
+const { calculateSimilarity } = require('./algorithms/Similarity');
 
 
 const app = express();
@@ -28,6 +31,16 @@ app.use(cors());
 
 app.listen(80, () => {
     console.log('Server is running on port 80');
+});
+
+app.post('/calculate-similarity', (req, res) => {
+  try {
+    const similarityResult = calculateSimilarity(); // Adjust this function call accordingly
+    res.json({ status: 'success', data: similarityResult });
+  } catch (error) {
+    console.error('Error calculating similarity:', error);
+    res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+  }
 });
 
 // const User = mongoose.model("UserInfo");

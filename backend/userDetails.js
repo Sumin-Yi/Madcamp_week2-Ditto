@@ -4,7 +4,8 @@ const UserDetailsSchema = new mongoose.Schema(
     {
         username: String,
         id: String,
-        password: String
+        password: String,
+        myList: {type: Map, of: Object,}
     },
     {
         collection: "UserInfo",
