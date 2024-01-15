@@ -1,31 +1,158 @@
 const express = require('express');
 const cors = require('cors');
-const { default: mongoose } = require('mongoose');
+const mongoose = require('mongoose');
 const bcrypt = require("bcryptjs");
-
-const cv = require("@u4/opencv4nodejs")
-
 const jwt = require("jsonwebtoken");
+const { Image } = require('image-js');
+const path = require('path')
+const axios = require('axios')
+const tf = require('@tensorflow/tfjs-node');
 
-const JWT_SECRET = "fsdhidsfbejbrichuishdihfjkwehihf"
-
-const { calculateSimilarity } = require('./algorithms/Similarity');
-
+const JWT_SECRET = "fsdhidsfbejbrichuishdihfjkwehihf";
 
 const app = express();
-app.use(express.json());
 
-//connect to mongodb
+app.use(express.json());
+app.use(cors());
+
+const cafes = require("./assets/cafes")
+
+// Connect to MongoDB
 const dbURI = 'mongodb+srv://suminY:sumin24@clusterditto.ensxxl4.mongodb.net/ditto';
-mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true})
-  .then((result) => console.log('connected to db'))
+mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then((result) => console.log('Connected to MongoDB'))
   .catch((err) => console.log(err));
 
   require("./userDetails")
+// Mongoose model for user details
+const User = mongoose.model("UserInfo");
 
-  const User = mongoose.model("UserInfo")
+async function calculateImageSimilarity(referenceImage, targetImage) {
+  // Load pre-trained VGG16 model
+  const model = await tf.loadLayersModel('https://tfhub.dev/google/tfjs-model/imagenet/vgg16/feature_vector/4/default/1', { strict: false });
 
-app.use(cors());
+  // Preprocess images and extract features using the model
+  const referenceFeatures = await preprocessAndExtractFeatures(model, referenceImage);
+  const targetFeatures = await preprocessAndExtractFeatures(model, targetImage);
+
+  // Compare features (e.g., cosine similarity)
+  const similarity = calculateCosineSimilarity(referenceFeatures, targetFeatures);
+
+  return similarity;
+}
+
+async function preprocessAndExtractFeatures(model, image) {
+  // Preprocess image for compatibility with VGG16 model
+  const preprocessedImage = await preprocessImage(image);
+
+  // Add batch dimension to the preprocessed image
+  const batchedImage = preprocessedImage.expandDims(0);
+
+  // Extract features using the pre-trained model
+  const features = model.predict(batchedImage);
+
+  return features;
+}
+
+async function preprocessImage(image) {
+  // Resize image to match the input size expected by the model
+  const resizedImage = tf.image.resizeBilinear(image, [224, 224]);
+
+  // Normalize pixel values to the range [0, 1]
+  const normalizedImage = tf.div(resizedImage, 255.0);
+
+  // Add batch dimension
+  const preprocessedImage = normalizedImage.expandDims(0);
+
+  return preprocessedImage;
+}
+
+function calculateCosineSimilarity(features1, features2) {
+  // Normalize feature vectors
+  const normalizedFeatures1 = tf.div(features1, tf.norm(features1));
+  const normalizedFeatures2 = tf.div(features2, tf.norm(features2));
+
+  // Calculate cosine similarity
+  const dotProduct = tf.matMul(normalizedFeatures1, tf.transpose(normalizedFeatures2));
+  const similarity = dotProduct.arraySync()[0][0]; // Extract scalar value from the tensor
+
+  return similarity;
+}
+
+
+const verifyToken = (req, res, next) => {
+  const token = req.headers.authorization;
+  if (!token) {
+      return res.status(401).json({ status: 'error', message: 'Unauthorized: Token missing' });
+  }
+
+  jwt.verify(token, JWT_SECRET, (err, user) => {
+      if (err) {
+          return res.status(401).json({ status: 'error', message: 'Unauthorized: Invalid token' });
+      }
+      req.user = user;
+      next();
+  });
+};
+
+app.get('/calculate-similarity', async (req, res) => {
+  try {
+    const referenceImagePath = path.join(__dirname, 'assets', 'gamsung.jpg');
+    const referenceImage = await Image.load(referenceImagePath);
+
+    const imageProcessingPromises = cafes.map(async (cafe) => {
+      try {
+        const imageResponse = await axios.get(cafe.image, { responseType: 'arraybuffer' });
+        const imageData = Buffer.from(imageResponse.data, 'binary');
+        const targetImage = await Image.load(imageData);
+    
+        // 각 카페 이미지를 크기 조절 없이 그대로 사용
+        // 이때 가로세로 비율이 다를 수 있음
+        // 예시로, resize 메서드에서 preserveAspectRatio 옵션을 사용하지 않거나 false로 설정
+        const resizedTargetImage = targetImage.resize({
+          width: referenceImage.width,
+          height: referenceImage.height,
+          preserveAspectRatio: false,
+        });
+    
+        const similarity = await calculateImageSimilarity(referenceImage, resizedTargetImage);
+    
+        // Check if similarity is NaN and replace with 0
+        const validSimilarity = isNaN(similarity) ? 0 : similarity;
+    
+        return {
+          title: cafe.title,
+          address: cafe.address,
+          image: cafe.image,
+          similarity: validSimilarity,
+        };
+      } catch (imageError) {
+        console.error('Error processing image:', imageError);
+        throw imageError;
+      }
+    });
+
+    const similarityResults = await Promise.all(imageProcessingPromises);
+
+    console.log('Before sorting:', similarityResults);
+
+    // Debugging sorting
+    similarityResults.sort((a, b) => {
+      console.log(`Comparing ${a.similarity} with ${b.similarity}`);
+      return b.similarity - a.similarity;
+    });
+
+    console.log('After sorting:', similarityResults);
+
+    const top5Results = similarityResults.slice(0, 5);
+
+    res.json({ status: 'success', data: top5Results });
+  } catch (error) {
+    console.error('Error calculating similarity:', error);
+    res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+  }
+});
+
 
 
 
@@ -33,15 +160,7 @@ app.listen(80, () => {
     console.log('Server is running on port 80');
 });
 
-app.post('/calculate-similarity', (req, res) => {
-  try {
-    const similarityResult = calculateSimilarity(); // Adjust this function call accordingly
-    res.json({ status: 'success', data: similarityResult });
-  } catch (error) {
-    console.error('Error calculating similarity:', error);
-    res.status(500).json({ status: 'error', message: 'Internal Server Error' });
-  }
-});
+
 
 // const User = mongoose.model("UserInfo");
 app.post("/register", async (req,res) => {
@@ -82,6 +201,33 @@ app.post("/login-user", async (req, res) => {
   }
   res.json({ status: "error", error: "Invalid Password" })
  });
+
+ app.post("/login", async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    // Find the user in the database
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ status: 'error', message: 'User not found' });
+    }
+
+    // Check the password
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      return res.status(401).json({ status: 'error', message: 'Invalid password' });
+    }
+
+    // Generate JWT token
+    const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET);
+
+    res.json({ status: 'success', token });
+  } catch (error) {
+    console.error('Error during login:', error);
+    res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+  }
+});
+
 
 app.post("/userData", async(req, res) => {
   const {token} = req.body;

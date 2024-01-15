@@ -32,7 +32,7 @@ export default class MyLists extends Component {
             <div>
                 Name<h1>{this.state.userData.username}</h1>
                 ID<h1>{this.state.userData.id}</h1>
-            <Link to="/ImageSearch">
+            <Link to="/image-search">
                 <button className="btn btn-primary">Go to ImageSearch</button>
             </Link>
             </div>

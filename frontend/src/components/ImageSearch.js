@@ -6,9 +6,14 @@ const ImageSearch = () => {
   const [similarityData, setSimilarityData] = useState(null);
 
   useEffect(() => {
-    // Fetch similarity data when the component mounts
+    // 서버에서 데이터를 가져오는 API 호출
     fetch('http://localhost:80/calculate-similarity')
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
       .then((data) => {
         if (data.status == 'success') {
           setSimilarityData(data.data);
