@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import Cities from '../lib/Cities';
 import './Searchbar.css';
 
-const SearchBar = ({onCitySelect}) => {
+const SearchBar = ({fun : onSelect, data : data}) => {
   const [search, setSearch] = useState('');
   const [filterCities, setFilterCities] = useState([]);
   const [selectedCity, setSelectedCity] = useState('');
@@ -11,7 +10,7 @@ const SearchBar = ({onCitySelect}) => {
     const searchText = e.target.value;
     setSearch(searchText);
 
-    const filteredCities = Cities.filter((city) => {
+    const filteredCities = data.filter((city) => {
       return city.includes(searchText.trim());
     });
 
@@ -20,7 +19,7 @@ const SearchBar = ({onCitySelect}) => {
 
   const handleCityClick = (city) => {
     setSelectedCity(city);
-    onCitySelect(city);
+    onSelect(city);
   }
 
   return (
@@ -28,7 +27,7 @@ const SearchBar = ({onCitySelect}) => {
       <form>
         <input
           type="text"
-          placeholder="지역을 검색하세요."
+          placeholder="검색하세요."
           value={search}
           onChange={onChange}
         />

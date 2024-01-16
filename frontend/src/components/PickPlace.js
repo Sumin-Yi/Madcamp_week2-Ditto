@@ -4,19 +4,35 @@ import "../lib/styles/Button.css";
 import "../lib/styles/Text.css";
 import "../lib/Structure.css";
 import { Progressbar } from './Progressbar';
-import SearchBar from './Searchbar';
-import {useState} from 'react';
+import SearchPlace from '../toolcomponents/SearchPlace';
+import {useState, useEffect} from 'react';
 import Datemap from './Datemap';
 
-export function PickPlace({onCitySelect}) {
+export function PickPlace({city, spot, onPickPlace}) {
     
+    const [places, setplaces] = useState(null);
+    const [selectedPlaces, setSelectedPlaces] = useState([]);
     
-    const [selectedCity, setSelectedCity] = useState('대전 유성구');
-    
-    const handleCitySelect = (city) => {
-        setSelectedCity(city);
-        onCitySelect(selectedCity);
+    useEffect(() => {
+      async function fetchPlaces(){
+        const getplaces = await SearchPlace({search : city + " " + spot});
+        setplaces(getplaces);
+      }
+      fetchPlaces()
+    }, [city, spot]);
+
+
+    const handlePlaceClick = (index) => {
+        const selectedPlace = places[index];
+        if (!selectedPlaces.some(place => place.place_name === selectedPlace.place_name)) {
+            setSelectedPlaces((prevSelected) => [...prevSelected, selectedPlace]);
+            onPickPlace(selectedPlaces);
+        }
     };
+
+    useEffect(() => {
+        onPickPlace(selectedPlaces);
+    }, [selectedPlaces]);
 
 
     return (  
@@ -28,19 +44,33 @@ export function PickPlace({onCitySelect}) {
                 </div>
 
                 <div className = "search_result">
-                    
-                    <div className = "search_bar">
-                        <SearchBar onCitySelect={handleCitySelect}/>
-                    </div>
+
+                <div className="searchlist">
+                    {places && places.length > 0 ? (
+                        places.map((elem, index) => (
+                        <p key={index} onClick={() => handlePlaceClick(index)}>
+                            {elem.place_name} - {elem.address_name}
+                        </p>
+                        ))
+                    ) : (
+                        <p>추천 장소가 없습니다.</p>
+                    )}
+                </div>
 
                     <div className = "searchmap">
                         
                         <div className = "searchcity">
-                            <p> {selectedCity} </p>
+                            <p> {city + " " + spot} </p>
+                        </div>
+
+                        <div className="selected_places">
+                            {selectedPlaces.map((selectedPlace, index) => (
+                                <p key={index}>{selectedPlace.place_name} - {selectedPlace.address_name}</p>
+                            ))}
                         </div>
                         
                         <div className = "resultmap">
-                            <Datemap search = {selectedCity}/>
+                            <Datemap search = {city + " " + spot}/>
                         </div>
                     </div>
                 </div>
