@@ -28,6 +28,117 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
 const User = mongoose.model("UserInfo");
 
 async function calculateImageSimilarity(referenceImage, targetImage) {
+  try {
+    // Calculate RGB similarity
+    const rgbSimilarity = await calculateColorSimilarityRGB(referenceImage, targetImage);
+
+    return rgbSimilarity;
+  } catch (error) {
+    console.error('Error calculating color similarity:', error);
+    throw error;
+  }
+}
+
+
+// ...
+async function calculateColorFeaturesRGB(image) {
+  try {
+    const data = image.data;
+    const totalPixels = data.length / 4; // Each pixel has 4 values (RGBA)
+
+    let totalRed = 0;
+    let totalGreen = 0;
+    let totalBlue = 0;
+    let totalBrightness = 0;
+
+    for (let i = 0; i < data.length; i += 4) {
+      totalRed += data[i];
+      totalGreen += data[i + 1];
+      totalBlue += data[i + 2];
+      totalBrightness += rgbToBrightness(data[i], data[i + 1], data[i + 2]);
+    }
+
+    const avgRed = totalRed / totalPixels;
+    const avgGreen = totalGreen / totalPixels;
+    const avgBlue = totalBlue / totalPixels;
+    const avgBrightness = totalBrightness / totalPixels;
+
+    return { avgRed, avgGreen, avgBlue, avgBrightness };
+  } catch (error) {
+    console.error('Error calculating color features (RGB):', error);
+    throw error;
+  }
+}
+
+function rgbToBrightness(red, green, blue) {
+  return 0.299 * red + 0.587 * green + 0.114 * blue;
+}
+
+async function calculateColorSimilarityRGB(referenceImage, targetImage) {
+  // Calculate RGB features for both images
+  const refColorFeatures = await calculateColorFeaturesRGB(referenceImage);
+  const targetColorFeatures = await calculateColorFeaturesRGB(targetImage);
+
+  // Calculate Euclidean distance between RGB features
+  const redDiff = Math.abs(refColorFeatures.avgRed - targetColorFeatures.avgRed);
+  const greenDiff = Math.abs(refColorFeatures.avgGreen - targetColorFeatures.avgGreen);
+  const blueDiff = Math.abs(refColorFeatures.avgBlue - targetColorFeatures.avgBlue);
+  const brightnessDiff = Math.abs(refColorFeatures.avgBrightness - targetColorFeatures.avgBrightness);
+
+  const euclideanDistance = Math.sqrt(Math.pow(redDiff, 2) + Math.pow(greenDiff, 2) + Math.pow(blueDiff, 2) + Math.pow(brightnessDiff, 2));
+
+  // Normalize distance (optional, depending on the specific use case)
+  const maxPossibleDistance = Math.sqrt(4); // Maximum Euclidean distance in 4D space (RGBB)
+  const normalizedDistance = euclideanDistance / maxPossibleDistance;
+
+  // Calculate similarity
+  const similarity = -1 * normalizedDistance;
+
+  return similarity;
+}
+
+
+// ...
+
+
+
+
+
+async function imageToTensor(image) {
+  try {
+    // Convert image data to Uint8Array
+    const imageData = new Uint8Array(image.data);
+
+    // Create a tensor from the image data
+    const tensor = tf.tensor3d(imageData, [image.height, image.width, 4], 'int32');
+
+    return tensor;
+  } catch (error) {
+    console.error('Error converting image to tensor:', error);
+    throw error;
+  }
+}
+
+
+const verifyToken = (req, res, next) => {
+  const token = req.headers.authorization;
+  if (!token) {
+      return res.status(401).json({ status: 'error', message: 'Unauthorized: Token missing' });
+  }
+
+  jwt.verify(token, JWT_SECRET, (err, user) => {
+      if (err) {
+          return res.status(401).json({ status: 'error', message: 'Unauthorized: Invalid token' });
+      }
+      req.user = user;
+      next();
+  });
+};
+
+app.get('/calculate-similarity', async (req, res) => {
+  try {
+    const referenceImagePath = path.join(__dirname, 'assets', 'unnamed.png');
+=======
   // Load pre-trained VGG16 model
   const model = await tf.loadLayersModel('https://tfhub.dev/google/tfjs-model/imagenet/vgg16/feature_vector/4/default/1', { strict: false });
 

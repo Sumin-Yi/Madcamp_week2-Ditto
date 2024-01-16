@@ -1,5 +1,3 @@
-// MyComponent.js
-
 import React, { useEffect, useState } from 'react';
 
 const ImageSearch = () => {
@@ -34,7 +32,7 @@ const ImageSearch = () => {
         <pre>{JSON.stringify(similarityData, null, 2)}</pre>
       ) : (
         // Loading state or error message
-        <div>Loading or Error...</div>
+        <div>Loading or Error…</div>
       )}
     </div>
   );

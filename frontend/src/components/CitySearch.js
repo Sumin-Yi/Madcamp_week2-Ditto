@@ -4,7 +4,7 @@ import "../lib/styles/Button.css";
 import "../lib/styles/Text.css";
 import "../lib/Structure.css";
 import { Progressbar } from './Progressbar';
-import { LoginNavigation } from './Navigation';
+import Cities from '../lib/Cities';
 import SearchBar from './Searchbar';
 import {useState} from 'react';
 import Datemap from './Datemap';
@@ -16,7 +16,7 @@ export function CitySearch({onCitySelect}) {
     
     const handleCitySelect = (city) => {
         setSelectedCity(city);
-        onCitySelect(selectedCity);
+        onCitySelect(city);
     };
 
 
@@ -31,7 +31,7 @@ export function CitySearch({onCitySelect}) {
                 <div className = "search_result">
                     
                     <div className = "search_bar">
-                        <SearchBar onCitySelect={handleCitySelect}/>
+                        <SearchBar fun={handleCitySelect} data = {Cities}/>
                     </div>
 
                     <div className = "searchmap">

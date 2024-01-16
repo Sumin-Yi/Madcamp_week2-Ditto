@@ -11,10 +11,8 @@ async function SearchPlace(searching) {
           throw new Error('Network response was not ok');
       }
       const data = await response.json();
-      
-      console.log("data is :", data);
 
-      return data.documents.map(place => ({
+      return data.documents.slice(0, 5).map(place => ({
           place_name: place.place_name,
           address_name: place.address_name,
           lat: place.x,

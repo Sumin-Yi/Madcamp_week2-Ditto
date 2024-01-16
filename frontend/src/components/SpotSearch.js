@@ -3,19 +3,20 @@ import './Progressbar.css';
 import "../lib/styles/Button.css";
 import "../lib/styles/Text.css";
 import "../lib/Structure.css";
+import Spots from '../lib/Spots';
 import { Progressbar } from './Progressbar';
 import SearchBar from './Searchbar';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import Datemap from './Datemap';
 
-export function SpotSearch({onCitySelect}) {
+export function SpotSearch({city: city, onSpotSelect: onSpotSelect}) {
     
-    
-    const [selectedCity, setSelectedCity] = useState('대전 유성구');
-    
-    const handleCitySelect = (city) => {
-        setSelectedCity(city);
-        onCitySelect(selectedCity);
+
+    const [selectedSpot, setSelectedSpot] = useState('');
+
+    const handleSpotSelect = (spot) => {
+        setSelectedSpot(spot);
+        onSpotSelect(spot);
     };
 
 
@@ -30,17 +31,17 @@ export function SpotSearch({onCitySelect}) {
                 <div className = "search_result">
                     
                     <div className = "search_bar">
-                        <SearchBar onCitySelect={handleCitySelect}/>
+                        <SearchBar fun={handleSpotSelect} data = {Spots}/>
                     </div>
 
                     <div className = "searchmap">
                         
                         <div className = "searchcity">
-                            <p> {selectedCity} </p>
+                            <p> {city + " " + selectedSpot} </p>
                         </div>
                         
                         <div className = "resultmap">
-                            <Datemap search = {selectedCity}/>
+                            <Datemap search = {city + " " + selectedSpot}/>
                         </div>
                     </div>
                 </div>
