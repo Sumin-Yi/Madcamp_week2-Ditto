@@ -98,26 +98,6 @@ async function calculateColorSimilarityRGB(referenceImage, targetImage) {
 }
 
 
-// ...
-
-
-
-
-
-async function imageToTensor(image) {
-  try {
-    // Convert image data to Uint8Array
-    const imageData = new Uint8Array(image.data);
-
-    // Create a tensor from the image data
-    const tensor = tf.tensor3d(imageData, [image.height, image.width, 4], 'int32');
-
-    return tensor;
-  } catch (error) {
-    console.error('Error converting image to tensor:', error);
-    throw error;
-  }
-}
 
 
 const verifyToken = (req, res, next) => {
@@ -137,79 +117,13 @@ const verifyToken = (req, res, next) => {
 
 app.get('/calculate-similarity', async (req, res) => {
   try {
-    const referenceImagePath = path.join(__dirname, 'assets', 'unnamed.png');
-=======
-  // Load pre-trained VGG16 model
-  const model = await tf.loadLayersModel('https://tfhub.dev/google/tfjs-model/imagenet/vgg16/feature_vector/4/default/1', { strict: false });
+    // Get the reference image URL from the frontend
+    const referenceImageUrl = req.query.referenceImageUrl; // Make sure to use the appropriate query parameter name
 
-  // Preprocess images and extract features using the model
-  const referenceFeatures = await preprocessAndExtractFeatures(model, referenceImage);
-  const targetFeatures = await preprocessAndExtractFeatures(model, targetImage);
-
-  // Compare features (e.g., cosine similarity)
-  const similarity = calculateCosineSimilarity(referenceFeatures, targetFeatures);
-
-  return similarity;
-}
-
-async function preprocessAndExtractFeatures(model, image) {
-  // Preprocess image for compatibility with VGG16 model
-  const preprocessedImage = await preprocessImage(image);
-
-  // Add batch dimension to the preprocessed image
-  const batchedImage = preprocessedImage.expandDims(0);
-
-  // Extract features using the pre-trained model
-  const features = model.predict(batchedImage);
-
-  return features;
-}
-
-async function preprocessImage(image) {
-  // Resize image to match the input size expected by the model
-  const resizedImage = tf.image.resizeBilinear(image, [224, 224]);
-
-  // Normalize pixel values to the range [0, 1]
-  const normalizedImage = tf.div(resizedImage, 255.0);
-
-  // Add batch dimension
-  const preprocessedImage = normalizedImage.expandDims(0);
-
-  return preprocessedImage;
-}
-
-function calculateCosineSimilarity(features1, features2) {
-  // Normalize feature vectors
-  const normalizedFeatures1 = tf.div(features1, tf.norm(features1));
-  const normalizedFeatures2 = tf.div(features2, tf.norm(features2));
-
-  // Calculate cosine similarity
-  const dotProduct = tf.matMul(normalizedFeatures1, tf.transpose(normalizedFeatures2));
-  const similarity = dotProduct.arraySync()[0][0]; // Extract scalar value from the tensor
-
-  return similarity;
-}
-
-
-const verifyToken = (req, res, next) => {
-  const token = req.headers.authorization;
-  if (!token) {
-      return res.status(401).json({ status: 'error', message: 'Unauthorized: Token missing' });
-  }
-
-  jwt.verify(token, JWT_SECRET, (err, user) => {
-      if (err) {
-          return res.status(401).json({ status: 'error', message: 'Unauthorized: Invalid token' });
-      }
-      req.user = user;
-      next();
-  });
-};
-
-app.get('/calculate-similarity', async (req, res) => {
-  try {
-    const referenceImagePath = path.join(__dirname, 'assets', 'gamsung.jpg');
-    const referenceImage = await Image.load(referenceImagePath);
+    // Fetch the reference image from the frontend URL
+    const referenceImageResponse = await axios.get(referenceImageUrl, { responseType: 'arraybuffer' });
+    const referenceImageData = Buffer.from(referenceImageResponse.data, 'binary');
+    const referenceImage = await Image.load(referenceImageData);
 
     const imageProcessingPromises = cafes.map(async (cafe) => {
       try {
@@ -225,6 +139,8 @@ app.get('/calculate-similarity', async (req, res) => {
           height: referenceImage.height,
           preserveAspectRatio: false,
         });
+
+        
     
         const similarity = await calculateImageSimilarity(referenceImage, resizedTargetImage);
     
