@@ -5,8 +5,6 @@ import "../lib/styles/Button.css";
 import "../lib/styles/Text.css";
 import "../lib/Structure.css";
 
-import {BsCart2} from "react-icons/bs";
-
 export const LogoutNavigation  = () => {
 
     return (
@@ -19,9 +17,7 @@ export const LogoutNavigation  = () => {
             <div className = "navbar-links-container">
                 <a href = "http://localhost:3000">Log In</a>
                 <a href = "http://localhost:3000">Sign Up</a>
-                <a href = "http://localhost:3000">
-                <BsCart2 className='navbar-cart-icon'/>
-                </a>
+                <a href = "http://localhost:3000"></a>
             </div>
         </nav>
     );
@@ -40,9 +36,7 @@ export const LoginNavigation  = () => {
             <div className = "navbar-links-container">
                 <a href = "http://localhost:3000">Log Out</a>
                 <a href = "http://localhost:3000">My List</a>
-                <a href = "http://localhost:3000">
-                <BsCart2 className='navbar-cart-icon'/>
-                </a>
+                <a href = "http://localhost:3000"></a>
             </div>
         </nav>
     );

@@ -1,15 +1,15 @@
-import './KeywordSearch.css';
+import './UploadImageSearch.css';
 import './Progressbar.css';
 import "../lib/styles/Button.css";
 import "../lib/styles/Text.css";
 import "../lib/Structure.css";
 import { useState } from 'react';
-import { CitySearch } from './CitySearch';
 import { SpotSearch } from './SpotSearch';
-import { PickPlace } from './PickPlace'; 
+import UploadBox, {Upload} from './Upload';
 import { LoginNavigation } from './Navigation';
+import ImageSearch from './ImageSearch';
 
-function KeywordSearch() {
+function UploadImageSearch() {
 
     var function_implemented_by_step = null;
     var goback = '';
@@ -17,22 +17,12 @@ function KeywordSearch() {
 
     const [step, setStep] = useState(1);
 
-    const [selectedCity, setSelectedCity] = useState('대전 유성구');
-
-    const [selectedSpot, setSelectedSpot] = useState('맛집');
+    const [selectedImage, setSelectedImage] = useState("");
 
     const [selectedPlace, setSelectedPlace] = useState([]);
 
-    const handleCitySelect = (city) => {
-        setSelectedCity(city);
-    };
-
-    const handleSpotSelect = (spot) => {
-        setSelectedSpot(spot);
-    };
-
-    const handlePlaceSelect = (place) => {
-        setSelectedPlace(place);
+    const handleImageSelect = (image) => {
+        setSelectedImage(image);
     };
 
     const handleGoBack = () => {
@@ -40,12 +30,10 @@ function KeywordSearch() {
     }
 
     const handleGoFront = () => {
-        if(step === 3) {
+        if(step === 1) {
 
-            // send data to server
-            var send_data = selectedPlace.map(place => ({ title: place.place_name, address: place.address_name }));
+        var send_data = {image : selectedImage};
 
-            console.log(send_data);
             fetch("서버주소", {
                 method: "POST",
                 headers: {
@@ -56,38 +44,38 @@ function KeywordSearch() {
                 .then(res => res.json())
                 .then(res => {
                     // respond
+
+                    setStep(prevStep => Math.min(prevStep + 1, 2));
                 })
                 .catch(error => {
                     // error
                 });
+            
+            setStep(prevStep => Math.min(prevStep + 1, 2));
         }
         else{
-            setStep(prevStep => Math.min(prevStep + 1, 3));
+            setStep(prevStep => Math.min(prevStep + 1, 2));
         }
     }
 
 
     if(step === 1) {
-        function_implemented_by_step = <CitySearch onCitySelect={handleCitySelect}/>
-        gofront = '다음으로'
-    }
-    else if (step === 2) {
-        function_implemented_by_step = <SpotSearch city = {selectedCity} onSpotSelect = {handleSpotSelect}/>
-        gofront = '다음으로'
-        goback = '뒤로가기'
+        function_implemented_by_step = <UploadBox onImageUpload={handleImageSelect}/>
+        gofront = '유사한 데이트 장소 추천받기'
     }
     else {
-        function_implemented_by_step = <PickPlace city = {selectedCity} spot = {selectedSpot} onPickPlace={handlePlaceSelect}/>
+        function_implemented_by_step = <ImageSearch/>
         gofront = '데이트 장소 담기'
         goback = '뒤로가기'
     }
+
 
     return (  
         <>
         <LoginNavigation/>
         <div className='full'>
             <h1 className = "keyword-search">
-            키워드 검색
+            이미지 검색
             </h1>
             {function_implemented_by_step}
             <div className = 'move'>
@@ -103,4 +91,4 @@ function KeywordSearch() {
     );
 }
 
-export default KeywordSearch
+export default UploadImageSearch
