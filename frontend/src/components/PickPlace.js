@@ -40,7 +40,7 @@ export function PickPlace({city, spot, onPickPlace}) {
             <div className = "contents">  
 
                 <div className = "progress_bar">
-                    <Progressbar state = {3}/>
+                    <Progressbar state = {4}/>
                 </div>
 
                 <div className = "search_result">

@@ -25,7 +25,7 @@ export function SpotSearch({city: city, onSpotSelect: onSpotSelect}) {
             <div className = "contents">  
 
                 <div className = "progress_bar">
-                    <Progressbar state = {2}/>
+                    <Progressbar state = {3}/>
                 </div>
 
                 <div className = "search_result">

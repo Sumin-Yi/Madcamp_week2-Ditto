@@ -16,7 +16,7 @@ handleSubmit(e) {
     e.preventDefault();
     const { username, id, password } = this.state;
     console.log(username, id, password);
-    fetch("http://localhost:80/register", {
+    fetch("http://172.10.8.246/register", {
         method: "POST",
         crossDomain: true,
         headers:{

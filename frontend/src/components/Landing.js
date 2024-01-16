@@ -4,8 +4,8 @@ import "./Landing.css";
 import "../lib/styles/Button.css";
 import "../lib/styles/Text.css";
 import "../lib/Structure.css";
-
 const Landing = () => {
+
     return (
         <div className = "home-container">
             <LoginNavigation/>
