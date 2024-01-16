@@ -53,7 +53,7 @@ function KeywordSearch() {
             var send_data = selectedPlace.map(place => ({ title: place.place_name, address: place.address_name }));
 
             console.log(send_data);
-            fetch("서버주소", {
+            fetch("http://172.10.8.235/calculate-similarity", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json; charset=utf-8"
