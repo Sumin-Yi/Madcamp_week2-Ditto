@@ -102,91 +102,7 @@ async function calculateColorSimilarityRGB(referenceImage, targetImage) {
 
 
 
-// async function calculateImageSimilarity(referenceImage, targetImage) {
-//   const bins = 64; // Number of bins in the color histogram
-//   const refHistogram = calculateColorHistogram(referenceImage, bins);
-//   const targetHistogram = calculateColorHistogram(targetImage, bins);
 
-//   // Calculate histogram intersection for similarity
-//   let intersection = 0;
-//   let refNorm = 0;
-//   let targetNorm = 0;
-
-//   for (let i = 0; i < bins; i++) {
-//     intersection += Math.min(refHistogram[i], targetHistogram[i]);
-//     refNorm += Math.pow(refHistogram[i], 2);
-//     targetNorm += Math.pow(targetHistogram[i], 2);
-//   }
-
-//   const similarity = intersection / Math.sqrt(refNorm * targetNorm);
-
-//   return similarity;
-// }
-
-// async function calculateImageSimilarity(referenceImage, targetImage) {
-//   try {
-//     // Convert image data to Float32Array (required by TensorFlow)
-//     const refImgTensor = await imageToTensor(referenceImage);
-//     const targetImgTensor = await imageToTensor(targetImage);
-//     const refTensorData = new Float32Array(refImgTensor.data);
-//     const targetTensorData = new Float32Array(targetImgTensor.data);
-
-//     // Create tensors from the image data
-//     const refTensor = tf.tensor3d(refTensorData, [referenceImage.height, referenceImage.width, 4], 'float32');
-//     const targetTensor = tf.tensor3d(targetTensorData, [targetImage.height, targetImage.width, 4], 'float32');
-
-//     // Calculate Mean Squared Error (MSE)
-//     const mse = tf.metrics.meanSquaredError(refTensor, targetTensor);
-
-//     // Calculate similarity
-//     const similarity = 1 - mse.dataSync()[0];
-
-//     // Dispose of tensors to free up memory
-//     refTensor.dispose();
-//     targetTensor.dispose();
-
-//     return similarity;
-//   } catch (error) {
-//     console.error('Error calculating image similarity:', error);
-//     throw error;
-//   }
-// }
-
-// function calculateColorHistogram(image, bins) {
-//   const data = image.data;
-//   const histogram = new Array(bins).fill(0);
-
-//   for (let i = 0; i < data.length; i += 4) {
-//     const redIndex = Math.floor((data[i] / 256) * bins);
-//     const greenIndex = Math.floor((data[i + 1] / 256) * bins);
-//     const blueIndex = Math.floor((data[i + 2] / 256) * bins);
-
-//     // Increase the count in the corresponding bin
-//     histogram[redIndex]++;
-//     histogram[greenIndex]++;
-//     histogram[blueIndex]++;
-//   }
-
-//   return histogram;
-// }
-
-// async function calculateImageSimilarity(referenceImage, targetImage) {
-//   try {
-//     const refTensor = await imageToTensor(referenceImage);
-//     const targetTensor = await imageToTensor(targetImage);
-
-//     // Calculate Mean Squared Error (MSE)
-//     const mse = tf.metrics.meanSquaredError(refTensor, targetTensor);
-
-//     // Calculate similarity
-//     const similarity = 1 - mse.dataSync()[0];
-
-//     return similarity;
-//   } catch (error) {
-//     console.error('Error calculating image similarity:', error);
-//     throw error;
-//   }
-// }
 
 async function imageToTensor(image) {
   try {
@@ -222,6 +138,77 @@ const verifyToken = (req, res, next) => {
 app.get('/calculate-similarity', async (req, res) => {
   try {
     const referenceImagePath = path.join(__dirname, 'assets', 'unnamed.png');
+=======
+  // Load pre-trained VGG16 model
+  const model = await tf.loadLayersModel('https://tfhub.dev/google/tfjs-model/imagenet/vgg16/feature_vector/4/default/1', { strict: false });
+
+  // Preprocess images and extract features using the model
+  const referenceFeatures = await preprocessAndExtractFeatures(model, referenceImage);
+  const targetFeatures = await preprocessAndExtractFeatures(model, targetImage);
+
+  // Compare features (e.g., cosine similarity)
+  const similarity = calculateCosineSimilarity(referenceFeatures, targetFeatures);
+
+  return similarity;
+}
+
+async function preprocessAndExtractFeatures(model, image) {
+  // Preprocess image for compatibility with VGG16 model
+  const preprocessedImage = await preprocessImage(image);
+
+  // Add batch dimension to the preprocessed image
+  const batchedImage = preprocessedImage.expandDims(0);
+
+  // Extract features using the pre-trained model
+  const features = model.predict(batchedImage);
+
+  return features;
+}
+
+async function preprocessImage(image) {
+  // Resize image to match the input size expected by the model
+  const resizedImage = tf.image.resizeBilinear(image, [224, 224]);
+
+  // Normalize pixel values to the range [0, 1]
+  const normalizedImage = tf.div(resizedImage, 255.0);
+
+  // Add batch dimension
+  const preprocessedImage = normalizedImage.expandDims(0);
+
+  return preprocessedImage;
+}
+
+function calculateCosineSimilarity(features1, features2) {
+  // Normalize feature vectors
+  const normalizedFeatures1 = tf.div(features1, tf.norm(features1));
+  const normalizedFeatures2 = tf.div(features2, tf.norm(features2));
+
+  // Calculate cosine similarity
+  const dotProduct = tf.matMul(normalizedFeatures1, tf.transpose(normalizedFeatures2));
+  const similarity = dotProduct.arraySync()[0][0]; // Extract scalar value from the tensor
+
+  return similarity;
+}
+
+
+const verifyToken = (req, res, next) => {
+  const token = req.headers.authorization;
+  if (!token) {
+      return res.status(401).json({ status: 'error', message: 'Unauthorized: Token missing' });
+  }
+
+  jwt.verify(token, JWT_SECRET, (err, user) => {
+      if (err) {
+          return res.status(401).json({ status: 'error', message: 'Unauthorized: Invalid token' });
+      }
+      req.user = user;
+      next();
+  });
+};
+
+app.get('/calculate-similarity', async (req, res) => {
+  try {
+    const referenceImagePath = path.join(__dirname, 'assets', 'gamsung.jpg');
     const referenceImage = await Image.load(referenceImagePath);
 
     const imageProcessingPromises = cafes.map(async (cafe) => {
@@ -238,8 +225,6 @@ app.get('/calculate-similarity', async (req, res) => {
           height: referenceImage.height,
           preserveAspectRatio: false,
         });
-
-        
     
         const similarity = await calculateImageSimilarity(referenceImage, resizedTargetImage);
     

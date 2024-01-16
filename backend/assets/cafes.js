@@ -272,7 +272,7 @@ const cafes = [
     {
         id:'46',
         title: '벤헤드바운스',
-        adress: '대전 서구 계룡로407번길 59하얀ㅊ',
+        adress: '대전 서구 계룡로407번길 59',
         image: 'https://scontent.ficn2-2.fna.fbcdn.net/v/t39.30808-6/307524046_388265696835968_4202327050178199664_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=3635dc&_nc_ohc=vhJVaoejjhkAX-h_bCF&_nc_ht=scontent.ficn2-2.fna&oh=00_AfAV9BUW-yq49v_tReJ_Me1VEfc0LBBl6eakDuGxJfG8aw&oe=65A9641B',
     },
     {
@@ -678,4 +678,5 @@ const cafes = [
     //     image: '',
     // },
     
-]
+];
+module.exports = cafes; 
