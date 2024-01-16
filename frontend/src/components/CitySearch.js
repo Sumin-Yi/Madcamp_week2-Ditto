@@ -25,7 +25,7 @@ export function CitySearch({onCitySelect}) {
             <div className = "contents">  
 
                 <div className = "progress_bar">
-                    <Progressbar state = {1}/>
+                    <Progressbar state = {2}/>
                 </div>
 
                 <div className = "search_result">

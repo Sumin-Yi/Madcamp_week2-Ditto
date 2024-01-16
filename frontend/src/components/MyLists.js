@@ -9,7 +9,7 @@ export default class MyLists extends Component {
         }
     }
     componentDidMount(){
-        fetch("http://localhost:80/userData", {
+        fetch("http://172.10.8.246/userData", {
             method: "POST",
             crossDomain: true,
             headers: {
