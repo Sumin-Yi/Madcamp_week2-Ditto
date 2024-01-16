@@ -6,7 +6,8 @@ const jwt = require("jsonwebtoken");
 const { Image } = require('image-js');
 const path = require('path')
 const axios = require('axios')
-const tf = require('@tensorflow/tfjs-node');
+const multer = require('multer');
+const fs = require('fs');
 
 const JWT_SECRET = "fsdhidsfbejbrichuishdihfjkwehihf";
 
@@ -115,15 +116,21 @@ const verifyToken = (req, res, next) => {
   });
 };
 
-app.get('/calculate-similarity', async (req, res) => {
-  try {
-    // Get the reference image URL from the frontend
-    const referenceImageUrl = req.query.referenceImageUrl; // Make sure to use the appropriate query parameter name
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
-    // Fetch the reference image from the frontend URL
-    const referenceImageResponse = await axios.get(referenceImageUrl, { responseType: 'arraybuffer' });
-    const referenceImageData = Buffer.from(referenceImageResponse.data, 'binary');
-    const referenceImage = await Image.load(referenceImageData);
+
+app.post('/calculate-similarity', upload.single('image'), async (req, res) => {
+  
+  console.log("file", req.file);
+  const imageBuffer = req.file.buffer;
+  console.log("imageBuffer", imageBuffer);
+  const filePath = 'uploadedimage.png'
+  fs.writeFileSync(filePath, imageBuffer);
+    
+  try {
+    const referenceImagePath = path.join(__dirname, 'uploadedimage.png');
+    const referenceImage = await Image.load(referenceImagePath);
 
     const imageProcessingPromises = cafes.map(async (cafe) => {
       try {
