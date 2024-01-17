@@ -1,4 +1,3 @@
-import React, { useState, useEffect} from 'react';
 import './Landing.css';
 import "../lib/styles/Button.css";
 import "../lib/styles/Text.css";
@@ -9,7 +8,6 @@ export function ProgressbarImage({state}) {
     var step1 = "progress_elem"
     var step2 = "progress_elem"
     var step3 = "progress_elem"
-    var step4 = "progress_elem"
     
     console.log(state)
     if(state === 1){

@@ -1,6 +1,6 @@
 import React, { useState, useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
-import Logo from '../lib/styles/Logo.svg'
+import Logo from '../lib/styles/DITTO.svg'
 import './Landing.css';
 import "../lib/styles/Button.css";
 import "../lib/styles/Text.css";
@@ -53,7 +53,10 @@ export const LoginNavigation = () => {
             </div>
             <div className="navbar-links-container">
                 {isLoggedIn ? (
-                    <a href="#" onClick={handleLogout}>Log Out</a>
+                    <>
+                        <a href="#" onClick={handleLogout}>Log Out</a>
+                        <a href="http://localhost:3000/mypage">My List</a>
+                    </>
                 ) : (
                     <>
                         <a href="http://localhost:3000/sign-in">Log In</a>

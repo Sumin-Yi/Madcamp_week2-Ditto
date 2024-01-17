@@ -115,7 +115,7 @@ function KeywordSearch() {
 
 
     if(step === 1) {
-        function_implemented_by_step = <Calendar onDate={handleDateSelect}/>
+        function_implemented_by_step = <Calendar onDate={handleDateSelect} mode = {1}/>
         gofront = '다음으로'
     }
     else if(step === 2) {

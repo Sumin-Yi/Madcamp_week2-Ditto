@@ -9,5 +9,25 @@
 }
 
 .keyword-search{
-    transform: translateX(-250px);   
+    transform: translateX(-500px);   
+}
+
+.move{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+.goback{
+    margin-left: 100px;
+}
+
+.gofront{
+    margin-right: 100px;
+}
+
+.calendar{
+    margin-left: 130px;
+    margin-right: 100px;
+    height: 100px;
 }

@@ -18,9 +18,9 @@ function UploadImageSearch() {
 
     const [step, setStep] = useState(1);
 
-    const [selectedImage, setSelectedImage] = useState("");
+    const [selectedImage, setSelectedImage] = useState(null);
 
-    const [selectedPlace, setSelectedPlace] = useState();
+    const [selectedPlace, setSelectedPlace] = useState([{place_name: "하얀책상", address_name: "대전광역시 서구 갈마동 갈마역로11번길 33", url: ""}]);
 
     const [selectedDate, setSelectedDate] = useState('20240116');
     
@@ -33,6 +33,10 @@ function UploadImageSearch() {
 
     const handleImageSelect = (image) => {
         setSelectedImage(image);
+    };
+
+    const handlePlaceSelect = (place) => {
+        setSelectedPlace(place);
     };
 
     const handleGoBack = () => {
@@ -58,8 +62,12 @@ function UploadImageSearch() {
     };
 
     const handleGoFront = () => {
-        if(step === 2) {
-
+        if(step === 1) {
+            setStep(prevStep => Math.min(prevStep + 1, 3));
+        }
+        
+        else if(step === 2) {
+            if(selectedImage){
             const blobImage = dataURLToBlob(selectedImage);
             const formData = new FormData();
             formData.append('image', blobImage);
@@ -67,7 +75,7 @@ function UploadImageSearch() {
             fetch("http://172.10.8.246/calculate-similarity", {
                 method: "POST",
                 body: formData,
-                timeout: 50000
+                timeout: 1000000
             })
             .then((response) => {
                 if (!response.ok) {
@@ -76,9 +84,15 @@ function UploadImageSearch() {
                 return response.json();
               })
               .then((data) => {
-                if (data.status == 'success') {
+                if (data.status === 'success') {
                     console.log(data.data);
-                  setSelectedPlace(data.data);
+                  setSelectedPlace( data.data.map(item => ({
+                    place_name: item.title,
+                    address_name: item.address,
+                    url: item.image,
+                })));
+                setStep(prevStep => Math.min(prevStep + 1, 3));
+                
                 } else {
                   console.error('Error fetching similarity data:', data.message);
                 }
@@ -86,17 +100,46 @@ function UploadImageSearch() {
               .catch((error) => {
                 console.error('Error fetching similarity data:', error);
               });
-            
-            setStep(prevStep => Math.min(prevStep + 1, 3));
+            }
+            else{
+                setStep(prevStep => Math.min(prevStep + 1, 3));
+            }
         }
         else{
+            
+            // send data to server
+            var send_data = selectedPlace.map(place => ({
+                date: selectedDate,
+                title: place.place_name,
+                address: place.address_name
+              }));
+            
+              console.log(send_data);
+              send_data.forEach(item => {
+                fetch("http://172.10.8.246/add-to-list", {
+                  method: "POST",
+                  headers: {
+                    "Authorization": window.localStorage.token,
+                    "Content-Type": "application/json"
+                  },
+                  body: JSON.stringify({ data: item }) // data를 item으로 변경
+                })
+                  .then(res => res.json())
+                  .then(res => {
+                    // respond
+                  })
+                  .catch(error => {
+                    // error
+                  });
+              });
+
             submitButtonClick()
         }
     }
 
 
     if(step === 1) {
-        function_implemented_by_step = <Calendar onDate={handleDateSelect}/>
+        function_implemented_by_step = <Calendar onDate={handleDateSelect} mode = {2}/>
         gofront = '다음으로'
     }
     else if(step === 2){
@@ -105,7 +148,7 @@ function UploadImageSearch() {
         goback = '뒤로가기'
     }
     else {
-        function_implemented_by_step = <ImageSearch place = {selectedPlace}/>
+        function_implemented_by_step = <ImageSearch place = {selectedPlace} onPickPlace={handlePlaceSelect}/>
         gofront = '데이트 장소 담기'
         goback = '뒤로가기'
     }

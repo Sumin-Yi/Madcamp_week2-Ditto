@@ -11,6 +11,7 @@ import ImageSearch from './components/ImageSearch'
 import React, { useState, useEffect } from 'react'
 import './App.css'
 import UploadImageSearch from './components/UploadImageSearch';
+import Mypage from './components/Mypage';
 
 function App(){
 
@@ -52,6 +53,7 @@ function App(){
             <Route path = "/upload" element = {<Upload/>}/>
             <Route path = "/keywordsearch" element = {<KeywordSearch/>}/>
             <Route path = "/uploadimagesearch" element = {<UploadImageSearch/>}/>
+            <Route path = "/mypage" element = {<Mypage/>}/>
         </Routes>
         </div>
     </div>
