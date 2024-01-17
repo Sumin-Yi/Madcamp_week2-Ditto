@@ -28,23 +28,25 @@ export default function Calendar({onDate}) {
   
     return (
     <>
-    <div className = "progress_bar">
-        <Progressbar state = {1}/>
-    </div>
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DatePicker 
-         slotProps={{
-             textField: {
-                 size: "small",
-             },
-         }}
-         format="YYYY.MM.DD"
-         value={date}
-         onChange = {handleDateChange}
-         mask = {"____-__-__"}
-         renderInput = {(params) => <TextField{...params} />}
-      />
-    </LocalizationProvider>
+      <div className = "contents">  
+        <div className = "progress_bar">
+            <Progressbar state = {1}/>
+        </div>
+        <LocalizationProvider className="datepicker" dateAdapter={AdapterDayjs}>
+          <DatePicker 
+            slotProps={{
+                textField: {
+                    size: "small",
+                },
+            }}
+            format="YYYY.MM.DD"
+            value={date}
+            onChange = {handleDateChange}
+            mask = {"____-__-__"}
+            renderInput = {(params) => <TextField{...params} />}
+          />
+        </LocalizationProvider>
+      </div>
     </>
   );
 }

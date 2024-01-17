@@ -1,18 +1,15 @@
 @import url("../lib/styles/root.css");
 @import url("../lib/styles/Text.css");
 
-.description{
-    display: flex;
-    justify-content: space-between;
-}
+body {
+    padding: 0;
+  }
 
-.textbox{
-    display: flex;
-    flex-direction: column;
-    align-items : center;
-    text-align : center;
-}
+.contents {
 
+    height: 700px;
+    
+}
 .progress_bar{
     position: relative;
     height: 180px;
@@ -21,37 +18,57 @@
 .search_result{
     display: flex;
     flex-direction: row;
-    height: 500px;
+    width: 100%;
+    height: 100%;
 }
 
-.searchcity{
-    height: 50px;
+.spot_text {
+  font-size: 20px;
+  color: var(--black);
 }
 
-.resultmap{
-    width: 480px;
-    height: 50px;
+
+.search_tab h1 {
+    text-align: left;
 }
 
-.search_bar{
-    width: 500px;
-    height: 100px;
+.search_tab,
+.searchmap {
+    flex: 1;
+    margin-left: 120px;
+    margin-right: 100px;
+}
+
+.category{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%; 
 }
 
 .searchmap{
+    width : 100%;
+    margin-left: 50px;
+}
+
+.searchmap h1 {
+    text-align: left;
+}
+
+.spotcity{
     display: flex;
-    flex-direction: column;
-    width: 500px;
-    height: 0px;
+    height: 15%;
+    width: 100%;
+    border-radius: 10px;
+    text-align: left;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    margin-bottom: 20px;
+}
+.spotcity h1 {
+    margin : 10px;
+    flex: 1;
 }
 
-.move {
-    display : flex;
-    flex-direction: row;
-    width : 960px;
-    justify-content: space-between;
-}
-
-.keyword-search {
-    margin-left : -800px;
+.shownmap{
+    width: 100%;
+    height: 100%;
 }

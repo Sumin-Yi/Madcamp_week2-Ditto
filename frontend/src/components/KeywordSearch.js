@@ -3,13 +3,15 @@ import './Progressbar.css';
 import "../lib/styles/Button.css";
 import "../lib/styles/Text.css";
 import "../lib/Structure.css";
+import "../lib/Cities.json";
 import { useState, useEffect } from 'react';
 import { CitySearch } from './CitySearch';
 import { SpotSearch } from './SpotSearch';
-import { PickPlace } from './PickPlace'; 
-import { LoginNavigation } from './Navigation';
+import { PickPlace } from './PickPlace';
 import { useNavigate } from 'react-router-dom';
 import Calendar from './Calendar';
+import { LoginNavigation } from './Navigation';
+
 
 function KeywordSearch() {
 
@@ -43,9 +45,9 @@ function KeywordSearch() {
 
     const [selectedDate, setSelectedDate] = useState('20240116');
     
-    const [selectedCity, setSelectedCity] = useState('대전 유성구');
+    const [selectedCity, setSelectedCity] = useState('대전');
 
-    const [selectedSpot, setSelectedSpot] = useState('맛집');
+    const [selectedSpot, setSelectedSpot] = useState('');
 
     const [selectedPlace, setSelectedPlace] = useState([]);
 
@@ -84,7 +86,8 @@ function KeywordSearch() {
                 title: place.place_name,
                 address: place.address_name
               }));
-
+            
+              console.log(send_data);
               send_data.forEach(item => {
                 fetch("http://172.10.8.246/add-to-list", {
                   method: "POST",
@@ -133,21 +136,21 @@ function KeywordSearch() {
 
     return (  
         <>
-        <LoginNavigation/>
-        <div className='full'>
-            <h1 className = "keyword-search">
-            키워드 검색
-            </h1>
-            {function_implemented_by_step}
-            <div className = 'move'>
-                <div className = 'goback' onClick = {handleGoBack}>
-                    <h1 className='small-primary-heading'>{goback}</h1>
-                </div>
-                <div className = 'gofront' onClick = {handleGoFront}>
-                    <h1 className='small-primary-heading'>{gofront}</h1>
+            <LoginNavigation/>
+            <div className='full'>
+                <h1 className = "keyword-search">
+                키워드 검색
+                </h1>
+                    {function_implemented_by_step}
+                <div className = 'move'>
+                    <div className = 'goback' onClick = {handleGoBack}>
+                        <h1 className='small-primary-heading'>{goback}</h1>
+                    </div>
+                    <div className = 'gofront' onClick = {handleGoFront}>
+                        <h1 className='small-primary-heading'>{gofront}</h1>
+                    </div>
                 </div>
             </div>
-        </div>
         </>
     );
 }

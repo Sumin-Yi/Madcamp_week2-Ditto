@@ -8,7 +8,7 @@
   }
 
 .primary-text {
-    font-size: clamp(1rem, 3vw, 1.5rem);
+    font-size: clamp(0.4rem, 1vw, 1.7rem);
     color: #6a6a6a;
     margin: 1.5rem 0rem;
 }

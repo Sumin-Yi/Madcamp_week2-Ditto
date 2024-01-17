@@ -1,0 +1,22 @@
+@import url("../lib/styles/root.css");
+@import url("../lib/styles/Text.css");
+@import url("../lib/Structure.css");
+
+
+body {
+    margin-left: 100px;
+    margin-right: 100px;
+    margin-top: 30px;
+    padding: 0;
+  }
+
+.progress_bar{
+    position: relative;
+    height: 180px;
+}
+
+.datepicker{
+    display: flex;
+    flex-direction: row;
+    height: 500px;
+}
