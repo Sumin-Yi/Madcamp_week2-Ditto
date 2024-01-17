@@ -14,7 +14,7 @@ export default class Login extends Component {
         e.preventDefault();
         const { id, password } = this.state;
         console.log( id, password);
-        fetch("http://localhost:80/login-user", {
+        fetch("http://172.10.8.246/login-user", {
         method: "POST",
         crossDomain: true,
         headers:{
@@ -32,7 +32,7 @@ export default class Login extends Component {
     if(data.status == "ok") {
         alert("login successful");
         window.localStorage.setItem("token", data.data);
-        window.location.href = "./my-lists"
+        window.location.href = "./main"
     }
     });
     }

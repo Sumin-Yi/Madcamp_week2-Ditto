@@ -40,3 +40,26 @@
   .secondary-button:hover {
     background-color: var(--orange100);
   }
+
+  .small-button {
+    padding: 0.5rem 2rem;
+    width: 100px;
+    height: 45px;
+    margin-top: 15px;
+    background-color: var(--main4);
+    outline: none;
+    border: none;
+    border-radius: 5rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+    font-weight: 600;
+    color: black;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .small-button:hover {
+    background-color: var(--orange100);
+  }

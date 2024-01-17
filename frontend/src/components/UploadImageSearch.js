@@ -4,11 +4,11 @@ import "../lib/styles/Button.css";
 import "../lib/styles/Text.css";
 import "../lib/Structure.css";
 import { useState } from 'react';
-import { SpotSearch } from './SpotSearch';
-import UploadBox, {Upload} from './Upload';
+import UploadBox from './Upload';
 import { LoginNavigation } from './Navigation';
 import ImageSearch from './ImageSearch';
 import { useNavigate } from 'react-router-dom';
+import Calendar from './Calendar';
 
 function UploadImageSearch() {
 
@@ -20,9 +20,16 @@ function UploadImageSearch() {
 
     const [selectedImage, setSelectedImage] = useState("");
 
-    const [selectedPlace, setSelectedPlace] = useState([]);
+    const [selectedPlace, setSelectedPlace] = useState();
+
+    const [selectedDate, setSelectedDate] = useState('20240116');
     
     const navigate = useNavigate();
+
+    const handleDateSelect = (date) => {
+        setSelectedDate(date);
+    }
+
 
     const handleImageSelect = (image) => {
         setSelectedImage(image);
@@ -51,28 +58,36 @@ function UploadImageSearch() {
     };
 
     const handleGoFront = () => {
-        if(step === 1) {
+        if(step === 2) {
 
             const blobImage = dataURLToBlob(selectedImage);
             const formData = new FormData();
             formData.append('image', blobImage);
-            console.log(formData);
 
-            fetch("http://172.10.8.235/calculate-similarity", {
+            fetch("http://172.10.8.246/calculate-similarity", {
                 method: "POST",
                 body: formData,
+                timeout: 50000
             })
-                .then(res => res.json())
-                .then(res => {
-                    // respond
-
-                    setStep(prevStep => Math.min(prevStep + 1, 2));
-                })
-                .catch(error => {
-                    // error
-                });
+            .then((response) => {
+                if (!response.ok) {
+                  throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+              })
+              .then((data) => {
+                if (data.status == 'success') {
+                    console.log(data.data);
+                  setSelectedPlace(data.data);
+                } else {
+                  console.error('Error fetching similarity data:', data.message);
+                }
+              })
+              .catch((error) => {
+                console.error('Error fetching similarity data:', error);
+              });
             
-            setStep(prevStep => Math.min(prevStep + 1, 2));
+            setStep(prevStep => Math.min(prevStep + 1, 3));
         }
         else{
             submitButtonClick()
@@ -81,11 +96,16 @@ function UploadImageSearch() {
 
 
     if(step === 1) {
+        function_implemented_by_step = <Calendar onDate={handleDateSelect}/>
+        gofront = '다음으로'
+    }
+    else if(step === 2){
         function_implemented_by_step = <UploadBox onImageUpload={handleImageSelect}/>
         gofront = '유사한 데이트 장소 추천받기'
+        goback = '뒤로가기'
     }
     else {
-        function_implemented_by_step = <ImageSearch/>
+        function_implemented_by_step = <ImageSearch place = {selectedPlace}/>
         gofront = '데이트 장소 담기'
         goback = '뒤로가기'
     }

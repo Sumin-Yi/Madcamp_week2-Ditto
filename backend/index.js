@@ -161,6 +161,7 @@ const upload = multer({ storage: storage });
 app.post('/calculate-similarity', upload.single('image'), async (req, res) => {
   
   try{
+<<<<<<< HEAD
   // console.log("file", req.file);
   // const imageBuffer = req.file.buffer;
   // console.log("imageBuffer", imageBuffer);
@@ -170,6 +171,17 @@ app.post('/calculate-similarity', upload.single('image'), async (req, res) => {
     // 파일 비동기적으로 쓰기
     // await fs.promises.writeFile(filePath, imageBuffer);
     // console.log('File written successfully');  
+=======
+  console.log("file", req.file);
+  const imageBuffer = req.file.buffer;
+  console.log("imageBuffer", imageBuffer);
+  const filePath = './assets/uploadedimage.png'
+  
+  try {
+    // 파일 비동기적으로 쓰기
+    await fs.promises.writeFile(filePath, imageBuffer);
+    console.log('File written successfully');  
+>>>>>>> 8f326a584b94768625e280a3606d152f6573f735
     try {
       const referenceImagePath = path.join(__dirname, 'assets', 'uploadedimage.png');
       const referenceImage = await Image.load(referenceImagePath);
