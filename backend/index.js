@@ -116,59 +116,103 @@ const verifyToken = (req, res, next) => {
   });
 };
 
+app.post('/add-to-list', verifyToken, async (req, res) => {
+  try {
+    console.log(req.body);
+    const { date, title, address } = req.body.data;
+    const userId = req.user.id;
+
+    // Find the user
+    const user = await User.findOne({ id: userId });
+
+    // Check if the date already exists in myList
+    if (user.myList && user.myList[date]) {
+      // Date already exists, push the new place object into the array
+      const updatedUser = await User.findOneAndUpdate(
+        { id: userId },
+        { $push: { [`myList.${date}`]: { title, address } } },
+        { new: true }
+      );
+
+      res.json({ status: 'success', data: updatedUser });
+    } else {
+      // Date doesn't exist, create a new entry with an array containing the place object
+      const updatedUser = await User.findOneAndUpdate(
+        { id: userId },
+        { $push: { [`myList.${date}`]: { title, address } } },
+        { new: true }
+      );
+
+      res.json({ status: 'success', data: updatedUser });
+    }
+  } catch (error) {
+    console.error('Error adding to list:', error);
+    res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+  }
+});
+
+
+
+
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 
 app.post('/calculate-similarity', upload.single('image'), async (req, res) => {
   
-  console.log("file", req.file);
-  const imageBuffer = req.file.buffer;
-  console.log("imageBuffer", imageBuffer);
-  const filePath = 'uploadedimage.png'
-  fs.writeFileSync(filePath, imageBuffer);
-    
+  try{
+  // console.log("file", req.file);
+  // const imageBuffer = req.file.buffer;
+  // console.log("imageBuffer", imageBuffer);
+  // const filePath = './assets/uploadedimage.png'
+  
   try {
-    const referenceImagePath = path.join(__dirname, 'uploadedimage.png');
-    const referenceImage = await Image.load(referenceImagePath);
+    // 파일 비동기적으로 쓰기
+    // await fs.promises.writeFile(filePath, imageBuffer);
+    // console.log('File written successfully');  
+    try {
+      const referenceImagePath = path.join(__dirname, 'assets', 'uploadedimage.png');
+      const referenceImage = await Image.load(referenceImagePath);
 
-    const imageProcessingPromises = cafes.map(async (cafe) => {
-      try {
-        const imageResponse = await axios.get(cafe.image, { responseType: 'arraybuffer' });
-        const imageData = Buffer.from(imageResponse.data, 'binary');
-        const targetImage = await Image.load(imageData);
-    
-        // 각 카페 이미지를 크기 조절 없이 그대로 사용
-        // 이때 가로세로 비율이 다를 수 있음
-        // 예시로, resize 메서드에서 preserveAspectRatio 옵션을 사용하지 않거나 false로 설정
-        const resizedTargetImage = targetImage.resize({
-          width: referenceImage.width,
-          height: referenceImage.height,
-          preserveAspectRatio: false,
-        });
+      const imageProcessingPromises = cafes.map(async (cafe) => {
+        try {
+          const imageResponse = await axios.get(cafe.image, { responseType: 'arraybuffer' });
+          const imageData = Buffer.from(imageResponse.data, 'binary');
+          const targetImage = await Image.load(imageData);
+      
+          // 각 카페 이미지를 크기 조절 없이 그대로 사용
+          // 이때 가로세로 비율이 다를 수 있음
+          // 예시로, resize 메서드에서 preserveAspectRatio 옵션을 사용하지 않거나 false로 설정
+          const resizedTargetImage = targetImage.resize({
+            width: referenceImage.width,
+            height: referenceImage.height,
+            preserveAspectRatio: false,
+          });
 
-        
+          
+      
+          const similarity = await calculateImageSimilarity(referenceImage, resizedTargetImage);
+      
+          // Check if similarity is NaN and replace with 0
+          const validSimilarity = isNaN(similarity) ? 0 : similarity;
+      
+          return {
+            title: cafe.title,
+            address: cafe.address,
+            image: cafe.image,
+            similarity: validSimilarity,
+          };
+        } catch (imageError) {
+          console.error('Error processing image:', imageError);
+          throw imageError;
+        }
+     
     
-        const similarity = await calculateImageSimilarity(referenceImage, resizedTargetImage);
-    
-        // Check if similarity is NaN and replace with 0
-        const validSimilarity = isNaN(similarity) ? 0 : similarity;
-    
-        return {
-          title: cafe.title,
-          address: cafe.address,
-          image: cafe.image,
-          similarity: validSimilarity,
-        };
-      } catch (imageError) {
-        console.error('Error processing image:', imageError);
-        throw imageError;
-      }
     });
 
     const similarityResults = await Promise.all(imageProcessingPromises);
 
-    console.log('Before sorting:', similarityResults);
+    // console.log('Before sorting:', similarityResults);
 
     // Debugging sorting
     similarityResults.sort((a, b) => {
@@ -179,15 +223,46 @@ app.post('/calculate-similarity', upload.single('image'), async (req, res) => {
     console.log('After sorting:', similarityResults);
 
     const top5Results = similarityResults.slice(0, 5);
+    
+    try {
+      await fs.promises.unlink(filePath);
+      console.log('File deleted successfully');
+    } catch (unlinkError) {
+      console.error('Error deleting file:', unlinkError);
+      // 파일 삭제 실패 시에 대한 적절한 처리를 추가할 수 있습니다.
+    }
 
     res.json({ status: 'success', data: top5Results });
   } catch (error) {
     console.error('Error calculating similarity:', error);
     res.status(500).json({ status: 'error', message: 'Internal Server Error' });
   }
+} catch (error) {
+  console.error('Error writing file:', error);
+  res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+}
+} catch(error) {
+  console.error('Error buffer', error)
+}
 });
 
+app.post("/my-list", verifyToken, async (req, res) => {
+  try {
+    const user = req.user;
+    const user_name = user.username;
 
+    User.findOne({ username: user_name })
+      .then((data) => {
+        const myListData = data ? data.myList : null;
+        res.send({ status: "ok", data: myListData });
+      })
+      .catch((error) => {
+        res.send({ status: "error", data: error });
+      });
+  } catch (error) {
+    res.send({ status: "error", data: error });
+  }
+});
 
 
 app.listen(80, () => {
