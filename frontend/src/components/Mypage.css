@@ -1,0 +1,87 @@
+@import url("../lib/styles/root.css");
+@import url("../lib/styles/Text.css");
+@import url("../lib/Structure.css");
+
+
+.place_text {
+    text-align: left;
+    margin-left: 120px;
+    margin-top: 40px;
+}
+
+
+.date_text {
+    text-align: left;
+    margin-left: 120px;
+    margin-top: 40px;
+    font-size: 25px;
+}
+
+.emtpy {
+    transform: translateX(100px);
+}
+
+.course_text {
+    font-size: 20px;
+    color: var(--black);
+    margin-bottom : 20px;
+}
+
+.search_result{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+}
+
+
+.show_tab h1 {
+    text-align: left;
+}
+
+.show_tab,
+.searchmap {
+    flex: 1;
+    margin-left: 120px;
+    margin-right: 100px;
+}
+
+.searchmap{
+    width : 100%;
+    margin-left: 50px;
+}
+
+.searchmap h1 {
+    text-align: left;
+}
+
+
+.shownmap{
+    width: 100%;
+    height: 100%;
+}
+
+.calendar{
+    margin-left: 130px;
+    margin-right: 100px;
+    height: 100px;
+}
+
+.show_tab button {
+    margin-top : 20px;
+    margin-left : 150px;
+}
+
+.no_text {
+    font-size: 20px;
+    color: var(--black);
+    margin-top : 100px;
+    margin-left : 150px;
+}
+
+.nolist {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}

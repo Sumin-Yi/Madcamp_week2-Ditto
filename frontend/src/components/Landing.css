@@ -36,3 +36,27 @@ nav{
   .navbar-cart-icon {
     font-size: 1.15rem;
   }
+
+  .home-text-section {
+    margin-top : 140px;
+  }
+
+  .hometext {
+    font-size: 30px;
+    text-align: left;
+    margin-top : 100px;
+  }
+
+  .homedescription {
+    font-size : 20px;
+    text-align: left;
+    margin-top : 50px;
+    width: 1080px;
+    font-style: italic; 
+    line-height: 1.5;
+    color: #495057;
+  }
+
+  .home-text-section button {
+    transform: translateY(100px);
+  }

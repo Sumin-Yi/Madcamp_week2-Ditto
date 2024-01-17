@@ -1,3 +1,21 @@
+@import url("../lib/styles/root.css");
+@import url("../lib/styles/Text.css");
+@import url("../lib/Structure.css");
+
+.contents {
+
+  height: 700px;
+  
+}
+
+.image_text {
+  font-size: 20px;
+  color: var(--black);
+  text-align: left;
+  margin-left: 340px;
+  margin-top: 0px;
+}
+
 .file {
     display: none;
   }
@@ -14,7 +32,7 @@
 
 .preview {
     width: 1000px;
-    height: 500px;
+    height: 300px;
     margin: auto;
     background-color: #fff;
     border-radius: 5px;
@@ -23,7 +41,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: top;
     cursor: pointer;
   }
   
@@ -65,4 +83,14 @@
   
   .preview_info .info_value {
     font-size: 14px;
+  }
+
+  .info-text{
+    font-size: 20px;
+    color: var(--black);
+  }
+
+  .info-subtext{
+    font-size: 14px;
+    color: var(--black);
   }

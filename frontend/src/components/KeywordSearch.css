@@ -20,3 +20,17 @@ body {
 .keyword-search{
   transform: translateX(-250px);   
 }
+
+.move{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.goback {
+  order: 1; /* goback을 왼쪽에 배치 */
+}
+
+.gofront {
+  order: 2; /* gofront를 오른쪽에 배치 */
+}

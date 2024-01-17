@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import './Upload.css';
+import { ProgressbarImage } from './ProgressbarImage';
 
 const FileInfo = ({ uploadedInfo }) => (
   <ul className="preview_info">
     {Object.entries(uploadedInfo).map(([key, value]) => (
       <li key={key}>
-        <span className="info_key">{key}</span>
-        <span className="info_value">{value}</span>
+        <h1 className="info-text">{key}</h1>
+        <h1 className="info-subtext">{value}</h1>
       </li>
     ))}
   </ul>
@@ -22,7 +23,7 @@ const UploadBox = ({onImageUpload}) => {
 
   const setFileInfo = (file) => {
     const { name, size: byteSize, type } = file;
-    const size = (byteSize / (1024 * 1024)).toFixed(2) + 'mb';
+    const size = (byteSize / (1024 * 1024)).toFixed(2) + 'MB';
     setUploadedInfo({ name, size, type });
 
     
@@ -69,6 +70,17 @@ const UploadBox = ({onImageUpload}) => {
   };
 
   return (
+
+    <div className = "contents">
+
+        <div className = "progress_bar">
+            <ProgressbarImage state = {2}/>
+        </div>
+
+      <h1 className = "image_text">
+          이미지를 업로드하세요.
+      </h1>
+
     <label
       className={`preview${isActive ? ' active' : ''}`}
       onDragEnter={handleDragStart}
@@ -82,17 +94,20 @@ const UploadBox = ({onImageUpload}) => {
 
       {imagePreview && (
         <div className="image_preview">
-          <img src={imagePreview} alt="Preview" />
+          {/* <img src={imagePreview} alt="Preview" /> */}
+          <h1 className = "info-text">사진이 잘 들어왔어요!</h1>
+          <h1 className="info-subtext">다른 사진을 넣고 싶다면 클릭하기</h1>
         </div>
       )}
 
       {!uploadedInfo && !imagePreview && (
         <>
-          <p className="preview_msg">클릭 혹은 파일을 이곳에 드랍하세요.</p>
-          <p className="preview_desc">파일당 최대 3MB</p>
+          <h1 className="info-text">클릭 혹은 파일을 이곳에 드랍하세요.</h1>
+          <h1 className="info-subtext">(파일당 최대 3MB)</h1>
         </>
       )}
     </label>
+    </div>
   );
 };
 

@@ -1,14 +1,17 @@
-import {useState, useEffect} from 'react';
+import {useState} from 'react';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import {TextField} from "@mui/material";
+import { ProgressbarImage } from './ProgressbarImage';
 import { Progressbar } from './Progressbar';
+import "./Calendar.css";
  
-export default function Calendar({onDate}) {
+export default function Calendar({onDate, mode}) {
   
 
     const [date, setDate] = useState()
+    var modeprogress;
 
     const handleDateChange = (newValue) => {
       const year = newValue.$y;
@@ -25,13 +28,21 @@ export default function Calendar({onDate}) {
           onDate(result);
         }
       }
-  
+      
+      if (mode === 1){
+        modeprogress = <div className = "progress_bar"> <Progressbar state = {1}/> </div>
+      }
+      else if (mode === 2){
+        modeprogress = <div className = "progress_bar"> <ProgressbarImage state = {1}/> </div>
+      }
+      else {
+        modeprogress = <div></div>
+      }
+
     return (
     <>
       <div className = "contents">  
-        <div className = "progress_bar">
-            <Progressbar state = {1}/>
-        </div>
+        {modeprogress}
         <LocalizationProvider className="datepicker" dateAdapter={AdapterDayjs}>
           <DatePicker 
             slotProps={{
@@ -46,7 +57,7 @@ export default function Calendar({onDate}) {
             renderInput = {(params) => <TextField{...params} />}
           />
         </LocalizationProvider>
-      </div>
+        </div>
     </>
   );
 }

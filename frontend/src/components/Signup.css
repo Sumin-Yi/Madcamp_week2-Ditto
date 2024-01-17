@@ -1,0 +1,76 @@
+.wrapper {
+
+    width: 420px;
+    background: transparent;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(30px);
+    box-shadow: 0 0 10px solid rgba(0, 0, 0, .2);
+    color: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    padding: 30px 40px;
+    transform: translateX(600px);
+    
+}
+
+.wrapper h3 {
+    font-size: 36px;
+    text-align: center;
+}
+
+.wrapper .mb-3 {
+    position: relative;
+    width: 100%;
+    height: 30px;
+    margin: 50px -15px;
+}
+
+.mb-3 input {
+    width: 90%;
+    height: 100%;
+    background: transparent;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    outline: none;
+    border-radius: 40px;
+    font-size: 16px;
+    color: rgba(0, 0, 0, 0.2);
+    padding: 10px 60px 10px 10px;
+  
+}
+
+.mb-3 input::placeholder {
+    color: rgba(0, 0, 0, 0.2);
+    padding-left: 30px;
+}
+
+.mb-3 .icon {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    
+    font-size: 16px;
+}
+
+.wrapper .custom-control-custom-checkbox {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14.5px;
+    margin: -15px 0 15px;
+}
+
+.custom-control-custom-checkbox label input {
+    background-color: rgba(0, 0, 0, 0.2); /* Fix typo here: accent-color to background-color */
+    margin-right: 4px;
+}
+
+.wrapper .btn-primary {
+    width: 100%;
+    height: 45px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border: none;
+    outline: none;
+    border-radius: 40px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    
+    cursor: pointer; /* Fix typo here: #333 to pointer */
+    font-weight: 700;
+}

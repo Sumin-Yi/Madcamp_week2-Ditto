@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import { LoginNavigation } from "./Navigation";
 import "../lib/styles/Button.css";
 import "./Main.css";
 import SvgIcon from "@mui/material/SvgIcon";
-import { SvgIconComponent } from "@mui/icons-material";
 import SearchIcon from '@mui/icons-material/Search';
 import ImageSearchIcon from '@mui/icons-material/ImageSearch';
 
@@ -60,11 +59,6 @@ export default function Main() {
                         <SvgIcon className = "icon" component={ImageSearchIcon} inheritViewBox style={{ width: '150px', height: '150px', marginTop: '10px'}} />
                         <h2 className = "primary-text"> 비슷한 느낌을 갖는 데이트 스팟을 추천해줍니다.</h2>
                     </div>
-                </div>
-                <div className="recommend">
-                    <h1 className="medium-primary-heading">
-                        나의 데이트 코스 
-                    </h1>
                 </div>
             </div>
         </>
