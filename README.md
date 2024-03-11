@@ -46,7 +46,7 @@ ID와 PW로 로그인할 수 있습니다. User name, ID, PW로 회원가입이 
 ### 4. 키워드 검색
 ![5](https://github.com/Sumin-Yi/MADCAMP_Week3/assets/149778119/902e1636-a892-4bfc-aef6-356597c1dade)
 ![4](https://github.com/Sumin-Yi/MADCAMP_Week3/assets/149778119/628340bd-1902-43e8-bae8-2ecc7a5b6f48)
-![3](https://github.com/Sumin-Yi/MADCAMP_Week3/assets/149778![2](https://github.com/Sumin-Yi/MADCAMP_Week3/assets/149778119/23217666-da77-4e17-abee-0d017cfb086e)
+![3](https://github.com/Sumin-Yi/MADCAMP_Week3/assets/149778119/dedc1c60-38a6-4216-a2a2-dd25473a5a56)
 ![2](https://github.com/Sumin-Yi/MADCAMP_Week3/assets/149778119/caa7f298-c519-4e41-a112-8f7c4dac8a64)
 
 날짜, 도시, 카테고리를 선택한 후 장소를 선택하여 나의 데이트 코스에 담을 수 있습니다. 장소들은 모두 지도에 마킹되어 있습니다.
